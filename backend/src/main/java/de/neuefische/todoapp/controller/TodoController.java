@@ -1,23 +1,31 @@
 package de.neuefische.todoapp.controller;
 
 import de.neuefische.todoapp.model.Todo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.neuefische.todoapp.service.TodoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/todo")
 public class TodoController {
 
-    private final List<Todo> todos = new ArrayList<>(List.of(
-            new Todo("1323","bla blub", "OPEN")
-    ));
+    private final TodoService todos;
+
+    @Autowired
+    public TodoController(TodoService todos) {
+        this.todos = todos;
+    }
 
     @GetMapping
     public List<Todo> getTodos() {
-        return  todos;
+        return todos.getAllTodos();
+    }
+
+    @PutMapping
+    public Todo addTodo(@RequestBody Todo newTodo) {
+        todos.addTodo(newTodo);
+        return newTodo;
     }
 }
